@@ -5,7 +5,6 @@
   "cordova": {
     "id": "cordova-plugin-ios-app-update",
     "platforms": [
-      "android",
       "ios"
     ]
   },
@@ -15,7 +14,7 @@
   },
   "keywords": [
     "cordova",
-    "native",
+    "ios",
     "app update"
   ],
   "license": "MIT",
@@ -27,12 +26,10 @@
     "cordovaDependencies": {
       "<1.0.0": {
         "cordova": ">=7.1.0",
-        "cordova-android": ">=6.3.0",
         "cordova-ios": ">=4.4.0"
       },
       "1.0.0": {
         "cordova": ">=7.1.0",
-        "cordova-android": ">=6.3.0",
         "cordova-ios": ">=4.4.0"
       }
     }

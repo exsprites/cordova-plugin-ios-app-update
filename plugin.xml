@@ -9,11 +9,10 @@
     <license>MIT</license>
     <repo>https://github.com/exsprites/cordova-plugin-ios-app-update</repo>
     <issue>https://github.com/exsprites/cordova-plugin-ios-app-update/issues</issue>
-    <keywords>phonegap,cordova,native,app update</keywords>
+    <keywords>phonegap,cordova,ios,app update</keywords>
 
     <engines>
         <engine name="cordova" version=">=7.1.0" />
-        <engine name="cordova-android" version=">=6.3.0"/>
         <engine name="cordova-ios" version=">=4.4.0"/>
     </engines>
 
@@ -31,16 +30,5 @@
 
         <header-file src="src/ios/CDVAppUpdate.h" />
         <source-file src="src/ios/CDVAppUpdate.m" />
-    </platform>
-
-    <platform name="android">
-        <source-file src="src/android/CDVAppUpdate.java" target-dir="src/com/apache/cordova/appupdate" />
-
-        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
-        <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="AppUpdate">
-                <param name="android-package" value="com.kungfukingbetty.cordova.appupdate.CDVAppUpdate"/>
-            </feature>
-        </config-file>
     </platform>
 </plugin>
