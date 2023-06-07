@@ -36,31 +36,26 @@ static NSString *const TAG = @"CDVAppUpdate";
         NSLog(@"%@ Checking for app update", TAG);
         if ([lookup[@"resultCount"] integerValue] == 1) {
             NSString* appStoreVersion = lookup[@"results"][0][@"version"];
-            NSArray* appStoreVersionArr = [appStoreVersion componentsSeparatedByString:@"."];
             NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
-            NSArray* currentVersionArr = [currentVersion componentsSeparatedByString:@"."];
 
-            for (int idx=0; idx<[appStoreVersionArr count]; idx++) {
-                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-                f.numberStyle = NSNumberFormatterDecimalStyle;
-                NSNumber* appStoreVersionNumber = [f numberFromString:[appStoreVersionArr objectAtIndex:idx]];
-                NSNumber* currentVersionNumber = [f numberFromString:[currentVersionArr objectAtIndex:idx]];
+            // Support for version number of format #.#.# (one digit per section) e.g.
+            // 1.0.0, 1.0.1, ..., 1.0.9, 1.1.0, 1.1.1, ...
+            // 1.9.0, 1.9.1, ..., 1.9.9, 2.0.0, ... 
+            // Limit to 999 versions, ~ 1 version/week -> 20 years life-time per app
 
-                if ([currentVersionNumber compare:appStoreVersionNumber] == NSOrderedAscending) {
-                    NSLog(@"%@ Need to update [%@ != %@]", TAG, appStoreVersion, currentVersion);
-                    if ([force_api length] > 0) {
-                        NSURL* force_url = [NSURL URLWithString:[NSString stringWithFormat:force_api]];
-                        NSData* force_data = [NSData dataWithContentsOfURL:force_url];
-                        NSDictionary* force_lookup = [NSJSONSerialization JSONObjectWithData:force_data options:0 error:nil];
-                        update_force = [force_lookup objectForKey:force_key];
-                        for (id key in force_lookup) {
-                            [resultObj setObject:[force_lookup objectForKey:key] forKey:key];
-                        }
+            if ([currentVersion compare:appStoreVersion] == NSOrderedAscending) {
+                NSLog(@"%@ Need to update [%@ > %@]", TAG, appStoreVersion, currentVersion);
+                if ([force_api length] > 0) {
+                    NSURL* force_url = [NSURL URLWithString:[NSString stringWithFormat:force_api]];
+                    NSData* force_data = [NSData dataWithContentsOfURL:force_url];
+                    NSDictionary* force_lookup = [NSJSONSerialization JSONObjectWithData:force_data options:0 error:nil];
+                    update_force = [force_lookup objectForKey:force_key];
+                    for (id key in force_lookup) {
+                        [resultObj setObject:[force_lookup objectForKey:key] forKey:key];
                     }
-                    NSLog(@"%@ Force Update: %i", TAG, update_force);
-                    update_avail = YES;
-                    break;
                 }
+                NSLog(@"%@ Force Update: %i", TAG, update_force);
+                update_avail = YES;
             }
         }
     }
